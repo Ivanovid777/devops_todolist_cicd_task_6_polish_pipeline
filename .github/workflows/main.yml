@@ -144,7 +144,7 @@ jobs:
         path: ./*.tgz
 
   deploy-helm-dev:
-    if: inputs.environment == "development"
+    if: inputs.environment == 'development'
     name: Deploy helm to Development
     uses: ./.github/workflows/reusable-deployment.yml
     needs: [helm-ci, docker-ci]
@@ -154,7 +154,7 @@ jobs:
       version: ${{ github.sha }}
 
   deploy-helm-stg:
-    if: inputs.environment == "staging"
+    if: inputs.environment == 'staging'
     name: Deploy helm to Staging
     uses: ./.github/workflows/reusable-deployment.yml
     needs: [helm-ci, docker-ci]
