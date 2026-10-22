@@ -38,12 +38,12 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: helm-artifacts
+          name: helm-artifacts-${{ inputs.OsType }}-${{ inputs.PythonVersion }}
           path: .
 
       - uses: actions/download-artifact@v4
         with:
-          name: kind-cluster
+          name: kind-cluster-${{ inputs.OsType }}-${{ inputs.PythonVersion }}
           path: .
 
       - name: Set Up Helm
