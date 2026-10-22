@@ -17,6 +17,7 @@ on:
       helm-release-name:
         default: todoapp
         type: string
+
 jobs:
     deploy-helm:
       name: ${{ inputs.environment }}
