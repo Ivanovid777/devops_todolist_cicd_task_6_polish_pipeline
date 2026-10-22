@@ -3,6 +3,15 @@ name: python-deployment
 run-name: ${{ github.actor }} - ${{ github.ref_name}} -${{ github.sha }}
 
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        type: choice
+        options: [ 'development', 'staging']
+
+
   push:
     branches: ["main"]
   pull_request:
@@ -12,24 +21,28 @@ env:
   PythonVersion: 3.8
   DockerImageName: todoapp
 
+concurrency:
+ group: ${{ github.workflow }}-${{ github.ref }}
+ cancel-in-progress: true
+
 jobs:
   python-ci:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./src
     strategy:
       matrix:
         PythonVersion: [ 3.8, 3.9 ]
         OsType: [ ubuntu-latest, windows-latest ]
+    runs-on: ${{ matrix.OsType }}
+    defaults:
+      run:
+        working-directory: ./src
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python ${{ env.PythonVersion }}
+      - name: Set up Python ${{ matrix.PythonVersion }}
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ env.PythonVersion }}
+          python-version: ${{ matrix.PythonVersion }}
 
       - name: Install dependencies
         run: |
@@ -131,6 +144,7 @@ jobs:
         path: ./*.tgz
 
   deploy-helm-dev:
+    if: inputs.environment == "development"
     name: Deploy helm to Development
     uses: ./.github/workflows/reusable-deployment.yml
     needs: [helm-ci, docker-ci]
@@ -140,9 +154,10 @@ jobs:
       version: ${{ github.sha }}
 
   deploy-helm-stg:
+    if: inputs.environment == "staging"
     name: Deploy helm to Staging
     uses: ./.github/workflows/reusable-deployment.yml
-    needs: [deploy-helm-dev]
+    needs: [helm-ci, docker-ci]
     secrets: inherit
     with:
       environment: staging
