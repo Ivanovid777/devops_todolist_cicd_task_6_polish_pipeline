@@ -17,6 +17,12 @@ on:
       helm-release-name:
         default: todoapp
         type: string
+      OsType:
+        required: true
+        type: string
+      PythonVersion:
+        required: true
+        type: string
 
 jobs:
     deploy-helm:

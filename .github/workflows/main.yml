@@ -161,6 +161,8 @@ jobs:
     with:
       environment: development
       version: ${{ github.sha }}
+      OsType: inputs.OsType
+      PythonVersion: inputs.PythonVersion
 
   deploy-helm-stg:
     if: inputs.environment == 'staging'
@@ -173,3 +175,5 @@ jobs:
       version: ${{ github.sha }}
       helm-values-path: ./todoapp/values/stg.yaml
       helm-release-name: todoapp-staging
+      OsType: inputs.OsType
+      PythonVersion: inputs.PythonVersion
