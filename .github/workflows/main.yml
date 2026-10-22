@@ -10,6 +10,16 @@ on:
         required: true
         type: choice
         options: [ 'development', 'staging']
+      OsType:
+        required: true
+        type: boolean
+        description: 'Operating System to run the tests on'
+        options: [ ubuntu-latest, windows-latest ]
+      PythonVersion:
+        required: true
+        type: boolean
+        description: 'Python version to run the tests on'
+        options: [ 3.8, 3.9 ]
 
   push:
     branches: ["main"]
